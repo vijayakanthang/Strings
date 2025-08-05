@@ -48,9 +48,7 @@ const Header = () => {
         <div className='navm'>
           <Link to='/home'><img src={home} className='img' alt="Home" /></Link>
           <Link to='/search'><img src={search} className='img' alt="Search" /></Link>
-          <button onClick={openThreadModal} className='img-button'>
-            <img src={edit} className='img' alt="Write Thread" />
-          </button>
+          <Link onClick={openThreadModal}><img src={edit} className='img' alt="Write Thread" /></Link>
           <Link to='/fav'><img src={heart} className='img' alt="Favorites" /></Link>
           <Link to='/profile'><img src={profile} className='img' alt="Profile" /></Link>
         </div>
@@ -60,7 +58,7 @@ const Header = () => {
               <img src={menu} alt="Menu" className='img' />
             </button>
             {isDropdownOpen && (
-              <div className="dropdown-menu">
+              <div className="dropdown-menu show">
                 <div className="dropdown-item">Settings</div>
                 <div className="dropdown-item" onClick={() => handleMenuClick('logout')}>
                   Logout
