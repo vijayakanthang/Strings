@@ -108,7 +108,3 @@ VITE_API_BASE_URL=http://localhost:8080
 Made with ❤️ by [Vijayakanthan G](https://github.com/vijayakanthang)
 
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License.
