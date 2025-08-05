@@ -1,0 +1,97 @@
+.bg {
+    background-image: url('../../assets/bg1b.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 100vw;   
+    height: 100vh;  
+    overflow: hidden; 
+}
+
+.main {
+    position: absolute;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    position: relative;
+    display: flex;
+}
+
+.inputbox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    color: white;
+}
+
+.field {
+    margin: 2%;
+    height: 5vh;
+    width: 370px;
+    background-color: #333333; /* Dark grey */
+    color: white; /* Changed to white */
+    border: none;
+    border-radius: 1rem;
+    font-size: large;
+    text-align: start;
+    font-family: 'Courier New';
+    padding: 1vh;
+    border: #ffffff solid 1px; /* Grey */
+}
+
+.field:focus {
+    box-shadow: rgba(100, 100, 100, 0.656) 0px 15px 25px, white 1px 5px 10px; /* Grey shadow */
+    outline: solid rgba(255, 255, 255, 0.8) 1px; /* Changed to white */
+}
+
+.button {
+    margin: 2%;
+    padding: 1.5vh;
+    height: 6vh;
+    width: 380px;
+    background-color: rgb(242, 233, 233); /* Light grey */
+    color: #222222; /* Dark grey */
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-size: x-large;
+    font-family: monospace;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    color: #000000; /* Black */
+    background-color: #ffffff; /* Grey */
+    box-shadow: rgb(100, 100, 100) 0px 15px 25px, white 0px 5px 10px; /* Grey shadow */
+}
+
+.signup {
+    margin: 2%;
+    margin-left: 3.5%;
+    height: 7vh;
+    width: 370px;
+    text-decoration: none;
+    color: #888888; /* Grey */
+    font-size: medium;
+    align-content: center;
+    font-size: large;
+}
+
+.link {
+    color: white; /* Changed to white */
+    text-decoration: none;
+    padding-left: 5px;
+}
+
+.top {
+    color: white; /* Changed to white */
+    font-size: xx-large;
+    font-family: monospace;
+}
