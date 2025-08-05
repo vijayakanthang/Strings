@@ -7,6 +7,7 @@ import Header from './Header'
 import { jwtDecode } from "jwt-decode"
 import { toast, ToastContainer } from "react-toastify"
 import like from "../assets/heartm.png"
+import commentIcon from "../assets/comment.png";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"
 
@@ -15,6 +16,9 @@ const HomePage = () => {
     const [new_thread, setNew_thread] = useState()
     const [thread, setThread] = useState([])
     const navigate = useNavigate();
+    const [commentInputs, setCommentInputs] = useState({});
+    const [showComments, setShowComments] = useState({});
+5
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,17 +60,47 @@ const HomePage = () => {
     }
 
     // Like
-    const handleLike = async (threadId) => {
-        try {
-            const response = await axios.put(`${BASE_URL}/api/threads/${threadId}`, {
-                like: [username]
-            })
-            console.log(response.data)
-        } catch (error) {
-            console.error('Error liking the thread:', error)
-        }
-    }
+ const handleLike = async (threadId) => {
+    try {
+        const updatedThreads = thread.map((t) => {
+            if (t._id === threadId) {
+                const alreadyLiked = t.like.includes(username);
+                const updatedLikes = alreadyLiked
+                    ? t.like.filter(u => u !== username)
+                    : [...t.like, username];
+                return { ...t, like: updatedLikes };
+            }
+            return t;
+        });
+        setThread(updatedThreads);
 
+        await axios.put(`${BASE_URL}/api/threads/${threadId}/like`, {
+            username: username
+        });
+    } catch (error) {
+        console.error('Error updating like:', error);
+    }
+};
+
+const handleComment = async (threadId, commentText) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/api/threads/${threadId}/comment`, {
+            username: username,
+            comment: commentText
+        });
+
+        const updatedThreads = thread.map((t) => {
+            if (t._id === threadId) {
+                return { ...t, comment: [...t.comment, `${username}: ${commentText}`] };
+            }
+            return t;
+        });
+
+        setThread(updatedThreads);
+    } catch (error) {
+        console.error('Error commenting:', error);
+    }
+};
     return (
         <>
             <Header />
@@ -87,16 +121,62 @@ const HomePage = () => {
                 </form>
 
                 <div className='feed'>
-                    {thread.map((t, index) => (
-                        <div className='card' key={t._id}>
-                            <h3>{t.username}</h3>
-                            <span>{t.date}</span>
-                            <p>{t.new_thread}</p>
-                            <button onClick={() => handleLike(t._id)}>
-                                <img src={like} className='like' />
-                            </button>
-                        </div>
-                    ))}
+                {thread.map((t, index) => (
+    <div className='card' key={t._id}>
+        <h3>{t.username}</h3>
+        <span>{t.date}</span>
+        <p>{t.new_thread}</p>
+        <div className='actions'>
+    <button onClick={() => handleLike(t._id)}>
+  <img
+    src={like}
+    className={`like ${t.like.includes(username) ? 'liked' : ''}`}
+    alt="like"
+  />
+  <span>{t.like.length}</span>
+</button>
+
+
+    <button onClick={() =>
+        setShowComments(prev => ({ ...prev, [t._id]: !prev[t._id] }))
+    }>
+        <img src={commentIcon} className='comment-icon' />
+    </button>
+</div>
+
+{showComments[t._id] && (
+    <div className="comments-section">
+        <form
+            onSubmit={(e) => {
+                e.preventDefault();
+                handleComment(t._id, commentInputs[t._id]);
+                setCommentInputs({ ...commentInputs, [t._id]: "" });
+            }}
+            className="comment-form"
+        >
+            <input
+                type="text"
+                value={commentInputs[t._id] || ""}
+                onChange={(e) =>
+                    setCommentInputs({ ...commentInputs, [t._id]: e.target.value })
+                }
+                className="comment-input"
+                placeholder="Add a comment..."
+            />
+            <button type="submit" className="comment-btn">Comment</button>
+        </form>
+
+        <div className="existing-comments">
+            {t.comment.map((c, i) => (
+                <p key={i} className="comment">{c}</p>
+            ))}
+        </div>
+    </div>
+)}
+
+    </div>
+))}
+
                 </div>
             </div>
         </>

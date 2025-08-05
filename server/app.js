@@ -1,37 +1,45 @@
+// app.js
+
 const express = require('express');
-require('dotenv').config(); 
+require('dotenv').config();
 const cors = require('cors');
-const bodyParser = require('body-parser'); 
 const { connectToDatabase } = require('./db');
 const { accessToken } = require('./middleware/auth');
 const { signup, login } = require('./controllers/userController');
+
 const {
     getThreads,
     addThread,
     updateThread,
     deleteThread,
-    likeThread
+    likeThread,
+    commentThread
 } = require('./controllers/threadsController');
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// Connect to MongoDB
 connectToDatabase();
 
-// Auth routes
+// Auth Routes
 app.post('/signup', signup);
 app.post('/login', login);
 
-// Thread routes
+// Thread Routes
 app.get('/', getThreads);
 app.get('/home', accessToken, getThreads);
 app.post('/', addThread);
-app.put('/api/update/:id', updateThread);     
-app.put('/api/threads/:id', likeThread);      
+app.put('/api/update/:id', updateThread);
+app.put('/api/threads/:id', likeThread);
+app.post('/api/threads/:id/comment', commentThread);
 app.delete('/:id', deleteThread);
 
-// Start server
-app.listen(8080, () => {
-    console.log('Server running ');
+// Start Server
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
