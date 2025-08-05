@@ -5,6 +5,8 @@ import axios from 'axios'
 import '../stylesheet/ProfilePage.css'
 import {jwtDecode} from "jwt-decode";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 const ProfilePage = () => {
   const [name,setName] =useState('')
   const [mythread,setMythread]= useState([])
@@ -20,7 +22,7 @@ const ProfilePage = () => {
                 navigate("/login"); 
                 return;
             }
-            const response = await axios.get("http://localhost:8080/")
+            const response = await axios.get(`${BASE_URL}/`)
             setMythread(response.data)
 
             const decodedtoekn = jwtDecode(token)

@@ -3,6 +3,8 @@ import '../stylesheet/WriteThread.css';
 import axios from 'axios'
 import { jwtDecode } from "jwt-decode";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 const WriteThread = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState()
   const [new_thread, setNew_thread] = useState()
@@ -12,7 +14,7 @@ const WriteThread = ({ isOpen, onClose }) => {
 
   const handlePost = async () => {
     if (new_thread) {
-      const response = await axios.post("http://localhost:8080/", { username: username, new_thread: new_thread })
+      const response = await axios.post(`${BASE_URL}/`, { username: username, new_thread: new_thread })
       toast.success("posted")
       setThread([...thread, response.data])
       setNew_thread('');

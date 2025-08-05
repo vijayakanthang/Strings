@@ -1,30 +1,41 @@
 import React, { createContext, useReducer, useEffect, useState } from "react";
+
 export const AuthContext = createContext();
 
 const authReducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
-      return { user: action.payload };
+      return { ...state, user: action.payload };
     case "LOGOUT":
-      return { user: null };
+      return { ...state, user: null };
     default:
       return state;
   }
 };
 
 const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, { user: null });
-  const [loading, setloading] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  // Backend URL - can also use .env for this
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
+  const [state, dispatch] = useReducer(authReducer, {
+    user: null,
+    BASE_URL, // Include in state
+  });
+
   useEffect(() => {
-    let user = localStorage.getItem("token");
-    if (user != null) {
+    const user = localStorage.getItem("token");
+    if (user) {
       dispatch({ type: "LOGIN", payload: user });
     }
-    setloading(false);
+    setLoading(false);
   }, []);
 
+  if (loading) return <p>Loading...</p>;
+
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={{ ...state, dispatch, BASE_URL }}>
       {children}
     </AuthContext.Provider>
   );

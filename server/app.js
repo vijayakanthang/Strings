@@ -1,6 +1,7 @@
 const express = require('express');
+require('dotenv').config(); 
 const cors = require('cors');
-const bodyParser = require('body-parser'); // not needed if you're already using express.json()
+const bodyParser = require('body-parser'); 
 const { connectToDatabase } = require('./db');
 const { accessToken } = require('./middleware/auth');
 const { signup, login } = require('./controllers/userController');
@@ -26,8 +27,8 @@ app.post('/login', login);
 app.get('/', getThreads);
 app.get('/home', accessToken, getThreads);
 app.post('/', addThread);
-app.put('/api/update/:id', updateThread);     // <-- updated
-app.put('/api/threads/:id', likeThread);      // <-- updated
+app.put('/api/update/:id', updateThread);     
+app.put('/api/threads/:id', likeThread);      
 app.delete('/:id', deleteThread);
 
 // Start server
