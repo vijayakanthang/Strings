@@ -5,7 +5,7 @@ import { AuthContext } from './AuthContext';
 import{toast} from 'react-toastify'
 import "./LoginPage.css"
 
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const LoginPage = () => {
 
@@ -34,7 +34,7 @@ const LoginPage = () => {
             return;
         }
 
-        axios.post("http://localhost:8080/login",{username,password})
+        axios.post(`${BASE_URL}/login`,{username,password})
         .then((response) => {
             if (response.status === 200) {
               // console.log("token", response.data.token)

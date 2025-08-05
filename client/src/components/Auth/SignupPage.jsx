@@ -4,6 +4,8 @@ import "./LoginPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 const SignupPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -22,7 +24,7 @@ const SignupPage = () => {
 
     if (username !== '' && password !== '' && email !== '') {
       try {
-        await axios.post("http://localhost:8080/signup", {
+        await axios.post(`${BASE_URL}/signup`, {
           username,
           email,
           password
