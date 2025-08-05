@@ -18,7 +18,7 @@ const HomePage = () => {
     const navigate = useNavigate();
     const [commentInputs, setCommentInputs] = useState({});
     const [showComments, setShowComments] = useState({});
-5
+    5
 
     useEffect(() => {
         const fetchData = async () => {
@@ -60,47 +60,57 @@ const HomePage = () => {
     }
 
     // Like
- const handleLike = async (threadId) => {
-    try {
-        const updatedThreads = thread.map((t) => {
-            if (t._id === threadId) {
-                const alreadyLiked = t.like.includes(username);
-                const updatedLikes = alreadyLiked
-                    ? t.like.filter(u => u !== username)
-                    : [...t.like, username];
-                return { ...t, like: updatedLikes };
-            }
-            return t;
-        });
-        setThread(updatedThreads);
+    const handleLike = async (threadId) => {
+        try {
+            const updatedThreads = thread.map((t) => {
+                if (t._id === threadId) {
+                    const alreadyLiked = t.like.includes(username);
+                    const updatedLikes = alreadyLiked
+                        ? t.like.filter(u => u !== username)
+                        : [...t.like, username];
+                    return { ...t, like: updatedLikes };
+                }
+                return t;
+            });
+            setThread(updatedThreads);
 
-        await axios.put(`${BASE_URL}/api/threads/${threadId}/like`, {
-            username: username
-        });
-    } catch (error) {
-        console.error('Error updating like:', error);
+            await axios.put(`${BASE_URL}/api/threads/${threadId}/like`, {
+                username: username
+            });
+        } catch (error) {
+            console.error('Error updating like:', error);
+        }
+    };
+
+    const handleComment = async (threadId, commentText) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/api/threads/${threadId}/comment`, {
+                username: username,
+                comment: commentText
+            });
+
+            const updatedThreads = thread.map((t) => {
+                if (t._id === threadId) {
+                    return { ...t, comment: [...t.comment, `${username}: ${commentText}`] };
+                }
+                return t;
+            });
+
+            setThread(updatedThreads);
+        } catch (error) {
+            console.error('Error commenting:', error);
+        }
+    };
+
+    function formatDateTime(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = date.toLocaleString('default', { month: 'short' });
+        const year = date.getFullYear();
+
+        return ` ${month} ${day} ${year}`;
     }
-};
 
-const handleComment = async (threadId, commentText) => {
-    try {
-        const response = await axios.post(`${BASE_URL}/api/threads/${threadId}/comment`, {
-            username: username,
-            comment: commentText
-        });
-
-        const updatedThreads = thread.map((t) => {
-            if (t._id === threadId) {
-                return { ...t, comment: [...t.comment, `${username}: ${commentText}`] };
-            }
-            return t;
-        });
-
-        setThread(updatedThreads);
-    } catch (error) {
-        console.error('Error commenting:', error);
-    }
-};
     return (
         <>
             <Header />
@@ -121,61 +131,61 @@ const handleComment = async (threadId, commentText) => {
                 </form>
 
                 <div className='feed'>
-                {thread.map((t, index) => (
-    <div className='card' key={t._id}>
-        <h3>{t.username}</h3>
-        <span>{t.date}</span>
-        <p>{t.new_thread}</p>
-        <div className='actions'>
-    <button onClick={() => handleLike(t._id)}>
-  <img
-    src={like}
-    className={`like ${t.like.includes(username) ? 'liked' : ''}`}
-    alt="like"
-  />
-  <span>{t.like.length}</span>
-</button>
+                    {thread.map((t, index) => (
+                        <div className='card' key={t._id}>
+                            <p id='username'>{t.username}</p>
+                            <p id='msg'>{t.new_thread}</p>
+                            <div className='actions'>
+                                <div className='actions-buttons'>
+                                    <button id="like-btn" onClick={() => handleLike(t._id)}>
+                                        <img src={like} className={`like ${t.like.includes(username) ? 'liked' : ''}`} alt="like" />
+                                        <p id='like-count'>{t.like.length}</p>
+                                    </button>
+
+                                    <button id="cmt-icon-btn" onClick={() =>
+                                        setShowComments(prev => ({ ...prev, [t._id]: !prev[t._id] }))
+                                    }>
+                                        <img src={commentIcon} className='comment-icon' />
+                                    </button>
+                                </div>
+
+                                <p id='date'>{formatDateTime(t.date)}</p>
+                            </div>
 
 
-    <button onClick={() =>
-        setShowComments(prev => ({ ...prev, [t._id]: !prev[t._id] }))
-    }>
-        <img src={commentIcon} className='comment-icon' />
-    </button>
-</div>
 
-{showComments[t._id] && (
-    <div className="comments-section">
-        <form
-            onSubmit={(e) => {
-                e.preventDefault();
-                handleComment(t._id, commentInputs[t._id]);
-                setCommentInputs({ ...commentInputs, [t._id]: "" });
-            }}
-            className="comment-form"
-        >
-            <input
-                type="text"
-                value={commentInputs[t._id] || ""}
-                onChange={(e) =>
-                    setCommentInputs({ ...commentInputs, [t._id]: e.target.value })
-                }
-                className="comment-input"
-                placeholder="Add a comment..."
-            />
-            <button type="submit" className="comment-btn">Comment</button>
-        </form>
+                            {showComments[t._id] && (
+                                <div className="comments-section">
+                                    <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault();
+                                            handleComment(t._id, commentInputs[t._id]);
+                                            setCommentInputs({ ...commentInputs, [t._id]: "" });
+                                        }}
+                                        className="comment-form"
+                                    >
+                                        <input
+                                            type="text"
+                                            value={commentInputs[t._id] || ""}
+                                            onChange={(e) =>
+                                                setCommentInputs({ ...commentInputs, [t._id]: e.target.value })
+                                            }
+                                            className="comment-input"
+                                            placeholder="Add a comment..."
+                                        />
+                                        <button type="submit" className="comment-btn">Comment</button>
+                                    </form>
 
-        <div className="existing-comments">
-            {t.comment.map((c, i) => (
-                <p key={i} className="comment">{c}</p>
-            ))}
-        </div>
-    </div>
-)}
+                                    <div className="existing-comments">
+                                        {t.comment.map((c, i) => (
+                                            <p key={i} className="comment">{c}</p>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
-    </div>
-))}
+                        </div>
+                    ))}
 
                 </div>
             </div>
