@@ -1,7 +1,6 @@
 .tot {
     display: flex;
     flex-direction: column;
-    width: 100vh;
     align-items: center;
     justify-content: center;
 }
@@ -46,7 +45,9 @@
 
 /* FEED ----------------------------------------------- */
 
-
+.feed{
+    width: 60%;
+}
 
 .card {
     border-top: 1px groove rgba(128, 128, 128, 0.271);
@@ -114,9 +115,13 @@
     transition: transform 0.2s, filter 0.3s;
 }
 
-.like:hover {
-    transform: scale(1.1);
+.like:hover,
+.trash-icon:hover,
+.comment-icon:hover{
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
 }
+
 
 .liked {
     filter: invert(27%) sepia(85%) saturate(2885%) hue-rotate(347deg) brightness(92%) contrast(99%);
@@ -163,7 +168,7 @@
 
 .comment-input:focus {
     outline: none;
-    color: #0000006b;
+    color: #ffffff;
 
 }
 
@@ -195,12 +200,21 @@
 }
 
 .comment-icon {
-    height: 20px;
+    height: 23px;
     cursor: pointer;
     filter: invert();
-    /* border: red solid 2px; */
     background-color: transparent;
 
+
+}
+.delete-btn{
+    all: unset;
+}
+.trash-icon{
+    height: 20px;
+    filter: invert();
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.3s;
 
 }
 

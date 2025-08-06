@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom'
 import Header from './Header'
 import { jwtDecode } from "jwt-decode"
 import { toast, ToastContainer } from "react-toastify"
-import like from "../assets/heartm.png"
-import commentIcon from "../assets/comment.png";
+import like from "../assets/heart.svg"
+import commentIcon from "../assets/comment.svg";
+import trash from "../assets/trash.svg";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"
 
@@ -54,7 +55,7 @@ const HomePage = () => {
                 new_thread: new_thread
             })
             toast.success("Posted")
-            setThread([...thread, response.data])
+            setThread([response.data, ...thread]);
             setNew_thread('')
         }
     }
@@ -102,13 +103,33 @@ const HomePage = () => {
         }
     };
 
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+        if (!confirmDelete) return;
+
+        try {
+            await axios.delete(`${BASE_URL}/api/threads/${id}`, {
+                data: { username }
+            });
+            toast.success("Post deleted");
+            setThread(prev => prev.filter(thread => thread._id !== id));
+        } catch (err) {
+            toast.error("Failed to delete");
+            console.error(err);
+        }
+    };
+
+
     function formatDateTime(dateString) {
         const date = new Date(dateString);
         const day = date.getDate().toString().padStart(2, '0');
         const month = date.toLocaleString('default', { month: 'short' });
         const year = date.getFullYear();
 
-        return ` ${month} ${day} ${year}`;
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+
+        return ` ${month} ${day}, ${year} at ${hours}:${minutes}`;
     }
 
     return (
@@ -145,9 +166,16 @@ const HomePage = () => {
                                     <button id="cmt-icon-btn" onClick={() =>
                                         setShowComments(prev => ({ ...prev, [t._id]: !prev[t._id] }))
                                     }>
-                                        <img src={commentIcon} className='comment-icon' />
+                                        <img src={commentIcon} className='comment-icon' alt="comment" />
                                     </button>
+
+                                    {t.username === username && (
+                                        <button className="delete-btn" onClick={() => handleDelete(t._id)}>
+                                            <img src={trash} alt='trash' className="trash-icon"></img>
+                                        </button>
+                                    )}
                                 </div>
+
 
                                 <p id='date'>{formatDateTime(t.date)}</p>
                             </div>

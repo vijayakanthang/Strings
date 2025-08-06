@@ -36,7 +36,8 @@ app.post('/', addThread);
 app.put('/api/update/:id', updateThread);
 app.put('/api/threads/:id', likeThread);
 app.post('/api/threads/:id/comment', commentThread);
-app.delete('/:id', deleteThread);
+app.delete('/api/threads/:id', deleteThread);
+
 
 // Start Server
 const PORT = process.env.PORT || 8080;

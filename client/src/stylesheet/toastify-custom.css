@@ -1,0 +1,32 @@
+/* toastify-custom.css */
+
+/* Toast background */
+.Toastify__toast {
+  border-radius: 12px;
+  font-family: 'Segoe UI', sans-serif;
+  background: #696c6ebc !important;
+  color: #D3D9D4 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  
+}
+
+/* Progress bar color */
+.Toastify__progress-bar {
+  background: #487799 !important;
+}
+
+/* Success */
+.Toastify__toast--success {
+  background: #124E66 !important;
+}
+
+/* Error */
+.Toastify__toast--error {
+  background: #74092e !important;
+}
+
+/* Close button */
+.Toastify__close-button {
+  color: #ffffff !important;
+  border: #74092e;
+}

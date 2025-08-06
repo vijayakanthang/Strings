@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import '../stylesheet/Header.css';
-import home from '../assets/home.png';
-import search from '../assets/searchm.png';
-import heart from '../assets/heartm.png';
-import profile from '../assets/profilem.png';
-import edit from '../assets/editm.png';
+import home from '../assets/home.svg';
+import search from '../assets/search.svg';
+import heart from '../assets/heart.svg';
+import profile from '../assets/profile.svg';
+import plus from '../assets/plus.svg';
 import logo from '../assets/th.png';
-import menu from '../assets/menu.png';
+import menu from '../assets/menu.svg';
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import WriteThread from './WriteThread';
 
@@ -48,7 +48,7 @@ const Header = () => {
         <div className='navm'>
           <Link to='/home'><img src={home} className='img' alt="Home" /></Link>
           <Link to='/search'><img src={search} className='img' alt="Search" /></Link>
-          <Link onClick={openThreadModal}><img src={edit} className='img' alt="Write Thread" /></Link>
+          <Link onClick={openThreadModal}><img src={plus} className='img' alt="Write Thread" /></Link>
           <Link to='/fav'><img src={heart} className='img' alt="Favorites" /></Link>
           <Link to='/profile'><img src={profile} className='img' alt="Profile" /></Link>
         </div>

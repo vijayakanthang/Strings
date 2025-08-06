@@ -5,7 +5,7 @@ const Thread = require('../Schema/threadsSchema');
 // Get all threads
 async function getThreads(req, res) {
     try {
-        const threads = await Thread.find();
+        const threads = await Thread.find().sort({ date: -1 }); // Sort by date descending
         res.json(threads);
     } catch (error) {
         res.status(500).send("Error fetching threads");
@@ -17,7 +17,7 @@ async function addThread(req, res) {
     const { username, new_thread } = req.body;
     try {
         const newItem = new Thread({
-            date: new Date().toLocaleDateString(),
+            date: new Date(),
             username,
             new_thread,
             like: [],
@@ -70,14 +70,23 @@ async function updateThread(req, res) {
 // Delete a thread
 async function deleteThread(req, res) {
     const itemId = req.params.id;
+    const username = req.body.username; 
+
     try {
-        const itemToDelete = await Thread.deleteOne({ _id: itemId });
-        if (!itemToDelete) return res.status(404).send('Item not found');
+        const thread = await Thread.findById(itemId);
+        if (!thread) return res.status(404).send('Item not found');
+
+        if (thread.username !== username) {
+            return res.status(403).send('Not authorized');
+        }
+
+        await Thread.deleteOne({ _id: itemId });
         res.status(200).send('Deleted');
     } catch (error) {
         res.status(500).send('Server Error');
     }
 }
+
 
 // Add comment to a thread
 async function commentThread(req, res) {

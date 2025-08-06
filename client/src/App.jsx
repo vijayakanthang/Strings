@@ -8,6 +8,7 @@ import LoginPage from './components/Auth/LoginPage'
 import SignupPage from './components/Auth/SignupPage'
 import PrivateRoute from './components/Auth/PrivateRouter'
 import Search from './components/Search'
+import "./App.css"
 
 function App() {
 
