@@ -19,7 +19,7 @@ const HomePage = () => {
     const navigate = useNavigate();
     const [commentInputs, setCommentInputs] = useState({});
     const [showComments, setShowComments] = useState({});
-    5
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,7 +75,7 @@ const HomePage = () => {
             });
             setThread(updatedThreads);
 
-            await axios.put(`${BASE_URL}/api/threads/${threadId}/like`, {
+            await axios.put(`${BASE_URL}/api/threads/${threadId}`, {
                 username: username
             });
         } catch (error) {
@@ -92,7 +92,14 @@ const HomePage = () => {
 
             const updatedThreads = thread.map((t) => {
                 if (t._id === threadId) {
-                    return { ...t, comment: [...t.comment, `${username}: ${commentText}`] };
+                    return {
+                        ...t,
+                        comment: [...t.comment, {
+                            username: username,
+                            text: commentText,
+                            date: new Date().toISOString()
+                        }]
+                    };
                 }
                 return t;
             });
@@ -164,8 +171,11 @@ const HomePage = () => {
                                     </button>
 
                                     <button id="cmt-icon-btn" onClick={() =>
-                                        setShowComments(prev => ({ ...prev, [t._id]: !prev[t._id] }))
-                                    }>
+                                        setShowComments(prev => ({
+                                            [t._id]: !prev[t._id]
+                                        }))
+                                    }
+                                    >
                                         <img src={commentIcon} className='comment-icon' alt="comment" />
                                     </button>
 
@@ -206,8 +216,14 @@ const HomePage = () => {
 
                                     <div className="existing-comments">
                                         {t.comment.map((c, i) => (
-                                            <p key={i} className="comment">{c}</p>
+                                            <div key={i} className="comment">
+                                                <p id='cmt-username'> {c.username} </p>
+                                                <p> &nbsp; {c.text}</p>
+                                                <p id='date' >{formatDateTime(c.date)}</p>
+
+                                            </div>
                                         ))}
+
                                     </div>
                                 </div>
                             )}

@@ -97,7 +97,12 @@ async function commentThread(req, res) {
         const thread = await Thread.findById(_id);
         if (!thread) return res.status(404).send("Thread not found");
 
-        thread.comment.push(`${username}: ${comment}`);
+        thread.comment.push({
+            username,
+            text: comment,
+            date: new Date()
+        });
+
         await thread.save();
         res.status(200).json(thread);
     } catch (error) {
