@@ -13,7 +13,7 @@ const Search = () => {
   return (
     <div>  
       <Header/> 
-    <button onClick={handleToast}>dgfhvb</button>
+    <button onClick={handleToast}>This page is comming soon</button>
     </div>
   )
 }

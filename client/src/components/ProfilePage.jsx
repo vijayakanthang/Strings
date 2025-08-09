@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Header from './Header'
-import axios from 'axios'
-import '../stylesheet/ProfilePage.css'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from './Header';
+import axios from 'axios';
+import '../stylesheet/ProfilePage.css';
 import { jwtDecode } from "jwt-decode";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 const ProfilePage = () => {
-  const [name, setName] = useState('')
-  const [mythread, setMythread] = useState([])
-
+  const [name, setName] = useState('');
+  const [myThreads, setMyThreads] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,47 +21,71 @@ const ProfilePage = () => {
           navigate("/login");
           return;
         }
-        const response = await axios.get(`${BASE_URL}/`)
-        setMythread(response.data)
 
-        const decodedtoekn = jwtDecode(token)
-        const name = decodedtoekn.username;
-        setName(name);
+        const decodedToken = jwtDecode(token);
+        setName(decodedToken.username);
 
-      }
-      catch (error) {
-        console.error(error)
+        const response = await axios.get(`${BASE_URL}/`, {
+          headers: { Authorization: token }
+        });
+
+        setMyThreads(response.data);
+      } catch (error) {
+        console.error(error);
         navigate("/login");
-
       }
+    };
 
-    }
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
+
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${month} ${day}, ${year} at ${hours}:${minutes}`;
+  };
 
   return (
     <>
       <Header />
       <div className="profile-container">
+        
+        {/* Profile Header */}
         <div className="profile-header">
-          <h2>{name}</h2>
+          <div className="profile-avatar">
+            {name.charAt(0).toUpperCase()}
+          </div>
+          <div className="profile-info">
+            <h2>{name}</h2>
+            <p className="post-count">{myThreads.filter(t => t.username === name).length} posts</p>
+          </div>
         </div>
-        <div>
 
-          {mythread.filter(j => name == j.username).map((t) => (
-            <div className='card' key={t._id}>
-              <h3>{t.username}</h3>
-              <span>{t.date}</span>
-              <p>{t.new_thread}</p>
-
+        {/* Posts Section */}
+        <div className="profile-posts">
+          {myThreads.filter(t => t.username === name).map((t) => (
+            <div className='profile-card' key={t._id}>
+              <div className="post-header">
+                <h3>{t.username}</h3>
+                <span className="post-date">{formatDateTime(t.date)}</span>
+              </div>
+              <p className="post-text">{t.new_thread}</p>
             </div>
           ))}
 
-
+          {myThreads.filter(t => t.username === name).length === 0 && (
+            <p className="no-posts">You haven't posted anything yet.</p>
+          )}
         </div>
+
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;

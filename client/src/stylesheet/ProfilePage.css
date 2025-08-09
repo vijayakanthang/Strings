@@ -1,53 +1,162 @@
-/* ProfilePage.css */
+/* ProfilePage.css
+   Covers both original ProfilePage.jsx minimal markup AND the improved markup (profile-avatar, profile-posts, profile-card).
+   All classes/ids used in earlier messages are styled here.
+*/
 
-.profile-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+
+:root{
+  --card-bg: rgba(255,255,255,0.04);
+  --container-bg: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(255,255,255,0.01));
+  --glass-border: rgba(0,0,0,0.07);
+  --text: #e8eef2;
+  --muted: #cfcfcf;
+  --accent: #1e1e1e;
 }
 
-.profile-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.profile-header h3 {
-  font-size: 24px;
-  margin: 0;
-}
-
-.profile-header h4 {
-  font-size: 18px;
-  color: #888;
-  margin: 0;
-}
-
-.profile-threads {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.thread-card {
-  color: white;
-  background: grey;
-  border: 1px solid #dbdbdb;
-  border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  padding: 15px;
+.profile-container{
   width: 100%;
+  max-width: 980px;
+  margin: 22px auto;
+  padding: 22px;
+  border-radius: 16px;
+  background: var(--container-bg);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.32);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
   box-sizing: border-box;
 }
 
-.thread-card h3 {
-  font-size: 16px;
-  margin: 0 0 10px;
+/* Profile header (original component uses .profile-header) */
+.profile-header{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--card-bg);
 }
 
-.thread-card p {
-  font-size: 14px;
+/* If you use improved header with avatar and info */
+.profile-avatar{
+  width: 100px;
+  height: 100px;
+  min-width: 100px;
+  border-radius: 50%;
+  background: rgba(33, 33, 33, 0.9);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  border: 3px solid rgba(255,255,255,0.06);
+}
+
+/* name (h2 inside header) */
+.profile-header h2,
+.profile-username{
   margin: 0;
-  color: #333;
+  font-family: "Bungee", sans-serif;
+  color: var(--text);
+}
+
+/* post-count if present */
+.post-count{
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* layout when using improved profile-info block (optional) */
+.profile-info{
+  display:flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+/* profile bio (if you add one) */
+.profile-description,
+.profile-bio{
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* stats (if used) */
+.profile-stats{
+  display:flex;
+  gap: 28px;
+  align-items:center;
+  justify-content:center;
+  padding: 10px 0;
+}
+.profile-stat{
+  text-align:center;
+}
+.profile-stat-number{ color: var(--text); font-weight:700; font-size: 1.1rem; }
+.profile-stat-label{ color: var(--muted); font-size: 0.9rem; }
+
+/* posts list (this maps to .profile-posts or the .card elements used in mapping) */
+.profile-posts{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+  width: 100%;
+}
+
+/* re-use of .card style - profile posts will appear consistent */
+.profile-card,
+.card { /* .card also used in HomePage; keep consistent */
+  background: var(--card-bg);
+  padding: 14px 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.24);
+}
+
+/* header inside each profile post */
+.post-header{
+  display:flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+/* username in post header (h3 in profile) */
+.post-header h3{
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+/* post date inside profile cards */
+.post-date, .profile-card span{
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* post text */
+.post-text, .profile-card p{
+  color: var(--text);
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* fallback when no posts */
+.no-posts{
+  text-align: center;
+  color: var(--muted);
+  padding: 16px;
+}
+
+/* small-screen tweaks */
+@media (max-width: 720px){
+  .profile-container{ padding: 14px; }
+  .profile-avatar{ width: 84px; height: 84px; font-size: 30px; }
+  .post-header{ flex-direction: column; align-items: flex-start; gap: 6px; }
+  .post-date{ align-self: flex-end; }
 }
